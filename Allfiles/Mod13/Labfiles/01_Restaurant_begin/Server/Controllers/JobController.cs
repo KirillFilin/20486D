@@ -33,7 +33,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        public ActionResult<JobApplication> Post(JobApplication jobApplication)
+        public ActionResult<JobApplication> Create(JobApplication jobApplication)
         {
             _context.Add(jobApplication);
             _context.SaveChanges();
