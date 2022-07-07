@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using WorldJourney.Models;
+using WorldJourney.Filters;
 
 namespace WorldJourney
 {
@@ -16,12 +17,30 @@ namespace WorldJourney
         {
             services.AddMvc();
             services.AddSingleton<IData, Data>();
+            services.AddScoped<LogActionFilterAttribute>();
         }
 
         public void Configure(IApplicationBuilder app)
         {
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            //app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "TravelerRoute",
+                    template: "{controller}/{action}/{name}",
+                    defaults: new { controller = "Traveler", action = "Index", name = "Alexay Pivovarov" },
+                    constraints: new { name = "[A-Za-z ]+" }
+                );
+
+                routes.MapRoute(
+                  name: "defaultRoute",
+                  template: "{controller}/{action}/{id?}",
+                  defaults: new { controller = "Home", action = "Index" },
+                  constraints: new { id = "[0-9]+" }
+                );
+
+            });
         }
     }
 }
